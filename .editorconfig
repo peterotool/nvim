@@ -1,0 +1,31 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+# Root configuration
+root = true
+
+# Base settings for all files
+[*]
+end_of_line = lf
+charset = utf-8
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Indentation: default 4 spaces
+indent_style = space
+indent_size = 4
+
+# Lua
+[*.lua]
+indent_size = 2
+
+# Terraform (HCL)
+[*.tf]
+indent_size = 2
+
+# Bash
+[*.sh]
+indent_size = 2
+
+# Docker
+[Dockerfile]
+indent_size = 4
