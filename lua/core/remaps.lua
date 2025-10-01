@@ -45,10 +45,6 @@ vim.keymap.set('n', '<leader>x', ':close<CR>', { desc = '[C]lose Current [S]plit
 -- Exit insert mode without hitting Esc
 -- vim.keymap.set('i', 'jj', '<Esc>', { desc = 'Esc' })
 
--- Jump between markdown headers
-vim.keymap.set('n', 'gj', [[/^##\+ .*<CR>]], { desc = 'Jump Foward Markdown Header' })
-vim.keymap.set('n', 'gk', [[?^##\+ .*<CR>]], { desc = 'Jump Backward Markdown Header' })
-
 -- Copy file paths
 vim.keymap.set('n', '<leader>cf', '<cmd>let @+ = expand("%:t")<CR>', { desc = '[C]opy File Name' })
 vim.keymap.set('n', '<leader>cp', '<cmd>let @+ = expand("%:p")<CR>', { desc = '[C]opy File Path' })
