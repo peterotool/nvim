@@ -57,7 +57,7 @@ vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
 -- https://youtu.be/w7i4amO_zaE?list=PLm323Lc7iSW_wuxqmKx_xxNtJC_hJbQ7R&t=1597
 vim.keymap.set('x', '<leader>p', [["_dP]])
 
-vim.keymap.set('n', '<C-f>', '<cmd>silent !tmux neww tmux-sessionizer<CR>')
+vim.keymap.set('n', '<C-f>', '<cmd>silent !tmux neww ~/.local/scripts/tmux-sessionizer.sh<CR>')
 
 -- vim-visual-multi
 vim.keymap.set('n', '<M-D-Down>', '<Plug>(VM-Select-Cursor-Down)') -- M(Option key) + D(Command key)
