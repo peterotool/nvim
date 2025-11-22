@@ -82,12 +82,4 @@ vim.o.hidden = true
 
 vim.g.markdown_fenced_languages = { 'javascript', 'typescript', 'bash', 'lua', 'go', 'rust', 'c', 'cpp', 'python', 'java', 'php' }
 
--- Treesitter-based folding:
--- the folding method 'expr'means that folding will be determined by the evaluation of an expression.
-vim.opt.foldmethod = 'expr'
-vim.opt.foldexpr = 'nvim_treesitter#foldexpr()' -- This line specifies the expression to be used for folding.
--- In this case, it calls the nvim_treesitter#foldexpr() function provided by the nvim-treesitter plugin.
--- This function utilizes the parsing capabilities of Treesitter to create folds based on the syntactic structure of the code, offering more accurate and intelligent folding compared to other methods like syntax or indent.
-vim.opt.foldlevel = 99 -- keep everything open by default
-
 vim.o.swapfile = false

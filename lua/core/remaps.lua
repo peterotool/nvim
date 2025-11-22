@@ -35,7 +35,7 @@ vim.keymap.set('n', 'N', 'Nzzzv', { desc = 'Keep cursor centered' })
 vim.keymap.set('n', '<Tab>', ':bnext<CR>', { desc = '[N]ext Buffer' }) -- next buffer
 vim.keymap.set('n', '<S-Tab>', ':bprevious<CR>', { desc = '[P]reviuos Buffer' }) -- previous buffer
 vim.keymap.set('n', '<leader>q', '<cmd>bdelete!<CR>', { desc = '[D]elete Buffer' }) -- delete buffer
-
+vim.keymap.set('n', '<leader>Q', '<cmd>bufdo if !&modified | bdelete | endif<CR>', { desc = 'Delete Unmodified Buffers' })
 vim.keymap.set('n', '<leader>w', ':write<CR>', { desc = '[W]rite Buffer' }) -- write buffer
 
 -- Window management
@@ -57,7 +57,7 @@ vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
 -- https://youtu.be/w7i4amO_zaE?list=PLm323Lc7iSW_wuxqmKx_xxNtJC_hJbQ7R&t=1597
 vim.keymap.set('x', '<leader>p', [["_dP]])
 
-vim.keymap.set('n', '<C-f>', '<cmd>silent !tmux neww tmux-sessionizer<CR>')
+vim.keymap.set('n', '<C-f>', '<cmd>silent !tmux neww ~/.local/scripts/tmux-sessionizer.sh<CR>')
 
 -- vim-visual-multi
 vim.keymap.set('n', '<M-D-Down>', '<Plug>(VM-Select-Cursor-Down)') -- M(Option key) + D(Command key)
@@ -65,3 +65,9 @@ vim.keymap.set('n', '<M-D-Up>', '<Plug>(VM-Select-Cursor-Up)')
 
 -- Make current file executable
 -- vim.keymap.set('n', '<leader>x', '<cmd>!chmod +x %<CR>', { silent = true })
+
+-- neo-tree
+vim.keymap.set('n', '<leader>e', '<cmd>Neotree toggle<cr>', { desc = 'Toggle Neo-tree' })
+vim.keymap.set('n', '<leader>fr', '<cmd>Neotree reveal<cr>', { desc = 'Reveal file in Neo-tree' })
+vim.keymap.set('n', '<leader>fg', '<cmd>Neotree git_status<cr>', { desc = 'Neo-tree Git status' })
+vim.keymap.set('n', '<leader>fb', '<cmd>Neotree buffers<cr>', { desc = 'Neo-tree Buffers' })
