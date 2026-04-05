@@ -83,3 +83,6 @@ vim.o.hidden = true
 vim.g.markdown_fenced_languages = { 'javascript', 'typescript', 'bash', 'lua', 'go', 'rust', 'c', 'cpp', 'python', 'java', 'php' }
 
 vim.o.swapfile = false
+
+-- used by bufferline plugin
+vim.opt.termguicolors = true
