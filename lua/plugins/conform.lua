@@ -50,21 +50,38 @@ return { -- Autoformat
         'ruff_organize_imports',
       },
       json = { 'prettier' },
+      yaml = { 'prettier' },
       markdown = { 'markdownlint-cli2', 'markdown-toc' },
       rust = { 'rustfmt' },
-      yaml = { 'prettier' },
       toml = { 'taplo' },
       sh = { 'shfmt' },
     },
     -- https://kitsugo.com/guide/nvim-default-formatter/
     formatters = {
+      -- We use ['markdownlint-cli2'] instead of markdownlint-cli2
+      -- because Lua keys with dashes (-) are NOT valid identifiers.
+      -- Without brackets, Lua would interpret it as subtraction:
+      -- markdownlint - cli2 (which is invalid here).
       ['markdownlint-cli2'] = {
+        -- prepend_args lets you add CLI arguments before the formatter runs
         prepend_args = function()
           return {
+            -- --config tells markdownlint-cli2 to use a custom config file
             '--config',
+
+            -- vim.fn.expand expands the ~ to your home directory
+            -- so this becomes an absolute path like /home/user/...
             vim.fn.expand '~/.dotfiles/stow/nvim/.config/nvim/.markdownlint.jsonc',
           }
         end,
+      },
+      prettier = {
+        prepend_args = {
+          -- '--tab-width',
+          -- '2',
+          -- '--use-tabs',
+          -- 'false',
+        },
       },
     },
   },

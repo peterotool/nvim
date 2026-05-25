@@ -14,7 +14,6 @@ return {
         mode = 'buffers',
         diagnostics = 'nvim_lsp',
         separator_style = 'slant',
-
         -- 🖱️ Click ❌ → bufferline → your function → buffer gets deleted
         close_command = function(n)
           require('mini.bufremove').delete(n, false)

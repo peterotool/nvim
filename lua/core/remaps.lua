@@ -63,18 +63,31 @@ vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
 
 -- greatest remap ever
--- | Part             | Meaning
--- | ---------------- | -----------------
--- | `'x'`            | Visual mode
--- | `'<leader>p'`    | Your keybinding
--- | `'"_dP'`         | The action (Delete into black hole register(does NOT save it anywhere) → paste
--- | `{ desc = ... }` | Description (for which-key, docs, etc.)
+-- Paste over selected text WITHOUT replacing your current yank/clipboard.
+--
+-- Default Vim behavior when pressing `p` in visual mode:
+--   1. Delete selected text
+--   2. Save deleted text into the unnamed register
+--   3. Paste previous yank
+--
+-- Problem:
+--   Your previous yank gets overwritten by the deleted text.
+--
+-- This remap fixes that by using the black hole register (`"_`):
+--   "_dP
+--
+-- Breakdown:
+--   "_d -> delete selection WITHOUT yanking it
+--   P   -> paste previously yanked text
+--
+-- Result:
+--   You can repeatedly paste/replace text while keeping the same yank.
 vim.keymap.set('x', '<leader>p', '"_dP', { desc = 'Paste without yanking' })
 -- "_d
 -- Deletes text BUT:
 -- does NOT save it anywhere
 -- your previous yank stays intact
-vim.keymap.set({ 'n', 'v' }, '<leader>x', '"_d', { desc = 'Delete without yanking' })
+-- vim.keymap.set({ 'n', 'v' }, '<leader>x', '"_d', { desc = 'Delete without yanking' })
 
 vim.keymap.set('n', '<C-f>', '<cmd>silent !tmux neww ~/.local/scripts/tmux-sessionizer.sh<CR>')
 
