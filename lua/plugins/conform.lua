@@ -33,13 +33,6 @@ return { -- Autoformat
     end,
     formatters_by_ft = {
       lua = { 'stylua' },
-      -- You can customize some of the format options for the filetype (:help conform.format)
-      -- Conform can also run multiple formatters sequentially
-      -- python = { "isort", "black" },
-      --
-      -- You can use 'stop_after_first' to run the first available formatter from the list
-      -- javascript = { "prettierd", "prettier", stop_after_first = true },
-      --
       -- lua =require("conform").list_all_formatters()
       python = {
         -- To fix auto-fixable lint errors.
@@ -74,14 +67,6 @@ return { -- Autoformat
             vim.fn.expand '~/.dotfiles/stow/nvim/.config/nvim/.markdownlint.jsonc',
           }
         end,
-      },
-      prettier = {
-        prepend_args = {
-          -- '--tab-width',
-          -- '2',
-          -- '--use-tabs',
-          -- 'false',
-        },
       },
     },
   },
