@@ -1,4 +1,4 @@
--- https://github.com/n vim-lualine/lualine.nvim
+-- https://github.com/nvim-lualine/lualine.nvim
 return {
   'nvim-lualine/lualine.nvim',
   config = function()

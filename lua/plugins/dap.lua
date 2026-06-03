@@ -1,3 +1,4 @@
+-- https://github.com/mfussenegger/nvim-dap
 return {
   -- NOTE: Yes, you can install new plugins here!
   'mfussenegger/nvim-dap',

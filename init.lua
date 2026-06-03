@@ -87,8 +87,6 @@ P.S. You can delete this when you're done too. It's your config now! :)
 require 'core.globals'
 require 'core.options'
 require 'core.remaps'
--- require 'core.terminal'
-require 'core.markdown-toc'
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -158,18 +156,26 @@ require('lazy').setup({
   },
 })
 
--- The line beneath this is called `modeline`. See `:help modeline`
--- vim: ts=2 sts=2 sw=2 et
+-- Diagnostic display configuration
+vim.diagnostic.config {
+  -- Disable inline text at the end of lines
+  virtual_text = false,
 
--- vim.cmd [[
--- function! Cs()
---     let cmdline = getcmdline()
---     if cmdline =~ "^'<,'>" && getcmdpos() == 6
---         return "s/\\%V"
---     else
---         return "s"
---     endif
--- endfunction
---
--- cnoremap <expr> s Cs()
--- ]]
+  -- Show signs in the gutter
+  signs = true,
+
+  -- Underline problematic code
+  underline = true,
+
+  -- Update diagnostics while typing
+  update_in_insert = false,
+
+  -- Sort diagnostics by severity
+  severity_sort = true,
+
+  -- Show diagnostics in a floating window on hover
+  float = {
+    border = 'rounded',
+    source = 'if_many',
+  },
+}

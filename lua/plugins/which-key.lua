@@ -1,32 +1,25 @@
--- NOTE: Plugins can also be configured to run Lua code when they are loaded.
---
--- This is often very useful to both group configuration, as well as handle
--- lazy loading plugins that don't need to be loaded immediately at startup.
---
--- For example, in the following configuration, we use:
---  event = 'VimEnter'
---
--- which loads which-key before all the UI elements are loaded. Events can be
--- normal autocommands events (`:help autocmd-events`).
---
--- Then, because we use the `config` key, the configuration only runs
--- after the plugin has been loaded:
---  config = function() ... end
-
-return { -- Useful plugin to show you pending keybinds.
+-- https://github.com/folke/which-key.nvim
+return {
+  -- Shows available keymaps as you type
   'folke/which-key.nvim',
-    event = 'VimEnter',
-    opts = {
-      -- delay between pressing a key and opening which-key (milliseconds)
-      delay = 0,
-      icons = { mappings = vim.g.have_nerd_font },
 
-      -- Document existing key chains
-    -- Document existing key chains
+  -- Load when Neovim starts
+  event = 'VimEnter',
+
+  opts = {
+    -- Show popup immediately
+    delay = 0,
+
+    -- Use Nerd Font icons when available
+    icons = {
+      mappings = vim.g.have_nerd_font,
+    },
+
+    -- Group related keymaps in the popup
     spec = {
-      { '<leader>g', group = '[G]itSigns' ,mode = { 'n', 'v' } },
+      { '<leader>g', group = '[G]itSigns', mode = { 'n', 'v' } },
       { '<leader>c', group = '[C]opy File', mode = { 'n', 'v' } },
-      { '<leader>s', group = '[S]earch Telescopce' },
+      { '<leader>s', group = '[S]earch Telescope' },
       { '<leader>t', group = '[T]oggle Terminal' },
     },
   },

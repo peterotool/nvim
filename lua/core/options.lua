@@ -86,3 +86,6 @@ vim.o.swapfile = false
 
 -- used by bufferline plugin
 vim.opt.termguicolors = true
+
+-- used by obsidian
+vim.opt.conceallevel = 2

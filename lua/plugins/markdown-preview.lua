@@ -1,3 +1,4 @@
+-- https://github.com/iamcco/markdown-preview.nvim
 -- install with yarn or npm
 return {
   'iamcco/markdown-preview.nvim',

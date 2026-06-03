@@ -1,73 +1,69 @@
 -- https://github.com/stevearc/conform.nvim
-return { -- Autoformat
+return {
+  -- Formatting plugin
   'stevearc/conform.nvim',
+
+  -- Load before saving files
   event = { 'BufWritePre' },
+
+  -- Utility command
   cmd = { 'ConformInfo' },
+
+  -- Manual format: <leader>f
   keys = {
     {
       '<leader>f',
       function()
-        require('conform').format { async = true, lsp_format = 'fallback' }
+        require('conform').format {
+          async = true,
+          lsp_format = 'fallback',
+        }
       end,
       mode = '',
       desc = '[F]ormat buffer',
     },
   },
+
   opts = {
+    -- Don't show notifications when formatting fails
     notify_on_error = false,
+
+    -- Auto-format on save
     format_on_save = function(bufnr)
-      -- Disable "format_on_save lsp_fallback" for languages that don't
-      -- have a well standardized coding style. You can add additional
-      -- languages here or re-enable it for the disabled ones.
-      local disable_filetypes = { c = true, cpp = true }
-      local lsp_format_opt
-      if disable_filetypes[vim.bo[bufnr].filetype] then
-        lsp_format_opt = 'never'
-      else
-        lsp_format_opt = 'fallback'
-      end
+      -- Disable LSP formatting fallback for languages
+      -- where formatting is often project-specific.
+      local disable_filetypes = {
+        c = true,
+        cpp = true,
+      }
+
       return {
         timeout_ms = 500,
-        lsp_format = lsp_format_opt,
+        lsp_format = disable_filetypes[vim.bo[bufnr].filetype] and 'never' or 'fallback',
       }
     end,
+
+    -- Formatters by filetype
     formatters_by_ft = {
+      -- Lua
       lua = { 'stylua' },
-      -- lua =require("conform").list_all_formatters()
+
+      -- Python: fix issues, format code, organize imports
       python = {
-        -- To fix auto-fixable lint errors.
         'ruff_fix',
-        -- To run the Ruff formatter.
         'ruff_format',
-        -- To organize the imports.
         'ruff_organize_imports',
       },
+
+      -- Prettier-based formats
       json = { 'prettier' },
       yaml = { 'prettier' },
-      markdown = { 'markdownlint-cli2', 'markdown-toc' },
+      markdown = { 'prettier' },
+
+      -- Language-specific formatters
       rust = { 'rustfmt' },
       toml = { 'taplo' },
       sh = { 'shfmt' },
-    },
-    -- https://kitsugo.com/guide/nvim-default-formatter/
-    formatters = {
-      -- We use ['markdownlint-cli2'] instead of markdownlint-cli2
-      -- because Lua keys with dashes (-) are NOT valid identifiers.
-      -- Without brackets, Lua would interpret it as subtraction:
-      -- markdownlint - cli2 (which is invalid here).
-      ['markdownlint-cli2'] = {
-        -- prepend_args lets you add CLI arguments before the formatter runs
-        prepend_args = function()
-          return {
-            -- --config tells markdownlint-cli2 to use a custom config file
-            '--config',
-
-            -- vim.fn.expand expands the ~ to your home directory
-            -- so this becomes an absolute path like /home/user/...
-            vim.fn.expand '~/.dotfiles/stow/nvim/.config/nvim/.markdownlint.jsonc',
-          }
-        end,
-      },
     },
   },
 }

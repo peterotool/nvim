@@ -1,25 +1,74 @@
-return { -- Highlight, edit, and navigate code
+-- https://github.com/nvim-treesitter/nvim-treesitter
+return {
+  {
+    -- Main Treesitter plugin
+    -- Provides syntax highlighting, indentation, text objects,
+    -- incremental selection, and a syntax tree API.
     'nvim-treesitter/nvim-treesitter',
+
+    -- Treesitter should not be lazy-loaded.
+    -- The maintainers explicitly recommend loading it at startup.
+    lazy = false,
+
+    -- Whenever the plugin is updated, update installed parsers too.
     build = ':TSUpdate',
-    main = 'nvim-treesitter.configs', -- Sets main module to use for opts
-    -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
-    opts = {
-      ensure_installed = { 'go', 'lua', 'python', 'rust', 'regex', 'bash', 'markdown', 'markdown_inline', 'sql', 'c', 'html', 'vim', 'vimdoc' },
-      -- Autoinstall languages that are not installed
-      auto_install = true,
-      highlight = {
-        enable = true,
-        -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
-        --  If you are experiencing weird indenting issues, add the language to
-        --  the list of additional_vim_regex_highlighting and disabled languages for indent.
-        additional_vim_regex_highlighting = { 'ruby' },
-      },
-      indent = { enable = true, disable = { 'ruby' } },
-    },
-    -- There are additional nvim-treesitter modules that you can use to interact
-    -- with nvim-treesitter. You should go explore a few and see what interests you:
-    --
-    --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
-    --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
-    --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
-  }
+
+    config = function()
+      require('nvim-treesitter').setup {
+
+        -- Where Treesitter parsers will be installed.
+        -- Default:
+        -- ~/.local/share/nvim/site
+        install_dir = vim.fn.stdpath 'data' .. '/site',
+
+        -- Languages that should always be installed.
+        -- Treesitter downloads a parser for each language.
+        ensure_installed = {
+          'go',
+          'lua',
+          'python',
+          'rust',
+          'regex',
+          'bash',
+          'sql',
+          'c',
+          'html',
+          'vim',
+          'vimdoc',
+        },
+
+        -- Automatically install missing parsers when opening files.
+        --
+        -- Example:
+        -- Open a JavaScript file without the parser installed →
+        -- Treesitter downloads it automatically.
+        auto_install = true,
+
+        -- Syntax highlighting configuration.
+        highlight = {
+          -- Enable Treesitter-based highlighting.
+          enable = true,
+
+          -- Keep Vim's regex highlighter enabled for specific languages.
+          --
+          -- Some languages still rely on Vim regex highlighting for
+          -- certain features. Ruby indentation is a common example.
+          additional_vim_regex_highlighting = {
+            'ruby',
+          },
+        },
+
+        -- Treesitter-based indentation.
+        indent = {
+          enable = true,
+
+          -- Disable Treesitter indentation for languages where
+          -- it is known to be unreliable.
+          disable = {
+            'ruby',
+          },
+        },
+      }
+    end,
+  },
+}
