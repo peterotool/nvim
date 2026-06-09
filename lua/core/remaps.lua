@@ -24,17 +24,7 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower [W]
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper [W]indow' })
 
 -- Diagnostic
-vim.keymap.set('n', '<leader>d', function()
-  vim.diagnostic.open_float(nil, {
-    focus = false,
-    border = 'rounded',
-    source = 'always',
-    max_width = 120,
-    max_height = 20,
-  })
-end, {
-  desc = 'Line diagnostics',
-})
+vim.keymap.set('n', '<leader>d', vim.diagnostic.setloclist, { desc = 'Open [D]iagnostic Quickfix list' })
 
 -- Open Terminals
 -- vim.keymap.set({ 'n' }, '<leader>tv', ':vsp  term://zsh<cr>', { desc = 'open [v]ertical [t]erminal' })

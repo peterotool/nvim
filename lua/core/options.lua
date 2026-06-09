@@ -80,12 +80,46 @@ vim.o.hlsearch = true
 -- Set this for ToggleTerm terminals to not be discarded when closed
 vim.o.hidden = true
 
-vim.g.markdown_fenced_languages = { 'javascript', 'typescript', 'bash', 'lua', 'go', 'rust', 'c', 'cpp', 'python', 'java', 'php' }
+-- Without this, code fences may appear as plain text.
+-- This mainly affects classic Vim markdown syntax highlighting.
+vim.g.markdown_fenced_languages = {
+  'javascript',
+  'typescript',
+  'bash',
+  'lua',
+  'go',
+  'rust',
+  'c',
+  'cpp',
+  'python',
+  'java',
+  'php',
+}
 
+-- Enable built-in Markdown heading folding.
+vim.g.markdown_folding = 1
+
+-- Disable swap files.
+-- Prevents creation of `.swp` files alongside edited files.
+-- Tradeoff:
+-- You lose Vim crash-recovery swap backups.
 vim.o.swapfile = false
 
--- used by bufferline plugin
+-- Enable true-color support (24-bit RGB colors) in the terminal.
+-- Required by many modern themes and UI plugins.
+-- bufferline.nvim depends on this for proper rendering.
 vim.opt.termguicolors = true
 
--- used by obsidian
+-- Control how concealed text is displayed.
+--
+-- conceallevel = 2 hides markup syntax while keeping the content visible.
+--
+-- Example in Markdown:
+--   **bold**
+--
+-- May render visually as:
+--   bold
+--
+-- Commonly used with Obsidian and Markdown plugins to create
+-- a cleaner, less noisy reading experience.
 vim.opt.conceallevel = 2
