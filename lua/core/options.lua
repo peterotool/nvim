@@ -136,5 +136,19 @@ vim.opt.termguicolors = true
 -- a cleaner, less noisy reading experience.
 -- vim.opt.conceallevel = 2
 
--- prevent the built-in vim.lsp.completion autotrigger from selecting the first item
-vim.opt.completeopt = { 'menuone', 'noselect', 'popup' }
+-- Completion menu behavior
+vim.opt.completeopt = {
+  'menuone', -- always show the completion menu, even for a single match
+  'noselect', -- do not preselect the first completion item
+  'popup', -- show documentation/details in a popup window
+  'fuzzy', -- enable fuzzy matching
+}
+
+-- Add omni-completion (LSP/omnifunc) as a completion source
+-- Equivalent to: :set complete+=o
+-- vim.opt.complete:append 'o'
+
+-- Enable Neovim's built-in automatic completion trigger.
+-- Completion suggestions appear while typing without
+-- manually pressing <C-x><C-o> or other completion commands.
+vim.o.autocomplete = true

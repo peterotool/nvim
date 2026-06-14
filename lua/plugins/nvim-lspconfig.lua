@@ -186,10 +186,10 @@ local tools = {
 }
 
 vim.pack.add {
-  'https://github.con/neovim/nvim-lspconfig',
-  'https://github.con/mason-org/mason.nvim',
-  'https://github.con/mason-org/mason-lspconfig.nvim',
-  'https://github.con/WhoIsSethDaniel/mason-tool-installer.nvim',
+  'https://github.com/neovim/nvim-lspconfig',
+  'https://github.com/mason-org/mason.nvim',
+  'https://github.com/mason-org/mason-lspconfig.nvim',
+  'https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim',
 }
 
 -- Automatically install LSPs and related tools to stdpath for Neovim
