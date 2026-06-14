@@ -1,8 +1,3 @@
--- https://github.com/mbbill/undotree
-return {
-  'mbbill/undotree',
+vim.pack.add { { src = 'https://github.com/mbbill/undotree', name = 'undotree' } }
 
-  config = function()
-    vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle, { desc = 'Undotree' })
-  end,
-}
+vim.keymap.set('n', '<leader>u', '<cmd>UndotreeToggle<cr>', { desc = 'Undotree' })

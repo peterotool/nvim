@@ -1,12 +1,10 @@
--- https://github.com/nathom/tmux.nvim
-return {
-  'nathom/tmux.nvim',
-  config = function()
-    local map = vim.api.nvim_set_keymap
-    map('n', '<C-h>', [[<cmd>lua require('tmux').move_left()<cr>]], { desc = 'Go left tmux window' })
-    map('n', '<C-j>', [[<cmd>lua require('tmux').move_down()<cr>]], { desc = 'Go top tmux window' })
-    map('n', '<C-k>', [[<cmd>lua require('tmux').move_up()<cr>]], { desc = 'Go bottom tmux window' })
-    map('n', '<C-l>', [[<cmd>lua require('tmux').move_right()<cr>]], { desc = 'Go right tmux window' })
-  end,
+vim.pack.add {
+  'https://github.com/nathom/tmux.nvim',
 }
 
+local tmux = require 'tmux'
+
+vim.keymap.set('n', '<C-h>', tmux.move_left, { desc = 'Go left tmux window' })
+vim.keymap.set('n', '<C-j>', tmux.move_down, { desc = 'Go down tmux window' })
+vim.keymap.set('n', '<C-k>', tmux.move_up, { desc = 'Go up tmux window' })
+vim.keymap.set('n', '<C-l>', tmux.move_right, { desc = 'Go right tmux window' })

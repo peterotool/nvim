@@ -1,69 +1,61 @@
--- https://github.com/stevearc/conform.nvim
-return {
-  -- Formatting plugin
-  'stevearc/conform.nvim',
+vim.pack.add { { src = 'https://github.com/stevearc/conform.nvim' } }
 
-  -- Load before saving files
-  event = { 'BufWritePre' },
+local conform = require 'conform'
 
-  -- Utility command
-  cmd = { 'ConformInfo' },
+conform.setup {
+  -- Don't show notifications when formatting fails
+  notify_on_error = false,
 
-  -- Manual format: <leader>f
-  keys = {
-    {
-      '<leader>f',
-      function()
-        require('conform').format {
-          async = true,
-          lsp_format = 'fallback',
-        }
-      end,
-      mode = '',
-      desc = '[F]ormat buffer',
-    },
-  },
+  -- Auto-format on save
+  format_on_save = function(bufnr)
+    local disable_filetypes = {
+      c = true,
+      cpp = true,
+    }
 
-  opts = {
-    -- Don't show notifications when formatting fails
-    notify_on_error = false,
+    return {
+      timeout_ms = 500,
+      lsp_format = disable_filetypes[vim.bo[bufnr].filetype] and 'never' or 'fallback',
+    }
+  end,
 
-    -- Auto-format on save
-    format_on_save = function(bufnr)
-      -- Disable LSP formatting fallback for languages
-      -- where formatting is often project-specific.
-      local disable_filetypes = {
-        c = true,
-        cpp = true,
-      }
-
-      return {
-        timeout_ms = 500,
-        lsp_format = disable_filetypes[vim.bo[bufnr].filetype] and 'never' or 'fallback',
-      }
-    end,
-
-    -- Formatters by filetype
-    formatters_by_ft = {
-      -- Lua
-      lua = { 'stylua' },
-
-      -- Python: fix issues, format code, organize imports
-      python = {
-        'ruff_fix',
-        'ruff_format',
-        'ruff_organize_imports',
-      },
-
-      -- Prettier-based formats
-      json = { 'prettier' },
-      yaml = { 'prettier' },
-      markdown = { 'prettier' },
-
-      -- Language-specific formatters
-      rust = { 'rustfmt' },
-      toml = { 'taplo' },
-      sh = { 'shfmt' },
-    },
+  -- Formatters by filetype
+  formatters_by_ft = {
+    -- Language-specific
+    python = { 'ruff' },
+    lua = { 'stylua' },
+    rust = { 'rustfmt' },
+    toml = { 'taplo' },
+    sh = { 'shfmt' },
+    -- Prettier
+    json = { 'prettier' },
+    yaml = { 'prettier' },
+    markdown = { 'prettier' },
   },
 }
+
+-- Manual format
+vim.keymap.set('n', '<leader>f', function()
+  conform.format {
+    async = true,
+    lsp_format = 'fallback',
+  }
+end, {
+  desc = '[F]ormat buffer',
+})
+
+-- Auto-format before save
+vim.api.nvim_create_autocmd('BufWritePre', {
+  callback = function(args)
+    conform.format {
+      bufnr = args.buf,
+      timeout_ms = 500,
+      lsp_format = 'fallback',
+    }
+  end,
+})
+
+-- Optional utility command
+vim.api.nvim_create_user_command('ConformInfo', function()
+  vim.cmd 'ConformInfo'
+end, {})

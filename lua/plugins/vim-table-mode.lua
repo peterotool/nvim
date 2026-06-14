@@ -1,16 +1,25 @@
--- https://github.com/dhruvasagar/vim-table-mode
--- https://github.com/dhruvasagar/vim-table-mode/issues/236
-return {
-  'dhruvasagar/vim-table-mode',
-  ft = 'markdown',
-  init = function()
-    -- Avoid polluting <leader>t mappings. (keep <leader>tm for enable)
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'markdown',
+  once = true,
+  callback = function()
+    vim.pack.add {
+      'https://github.com/dhruvasagar/vim-table-mode',
+    }
+
+    -- Keep the visual table styling
+    vim.g.table_mode_syntax = 1
+
+    -- Prevent extra default mappings if you do not want them
     vim.g.table_mode_disable_tableize_mappings = 1
 
-    -- FIX: Really slow performance: https://github.com/dhruvasagar/vim-table-mode/issues/227
-
-    vim.g.table_mode_syntax = 0
-
+    -- Markdown-friendly pipe corner
     vim.g.table_mode_corner = '|'
+
+    -- Manual realign mapping
+    vim.keymap.set('n', '<leader>ta', '<cmd>TableModeRealign<CR>', {
+      silent = true,
+      desc = 'Realign table',
+      buffer = true,
+    })
   end,
-}
+})

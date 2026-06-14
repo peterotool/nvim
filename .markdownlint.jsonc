@@ -64,8 +64,4 @@
     // MD044: Ensure proper names are spelled correctly
     "MD044": false,
 
-    // List of files or directories to ignore during linting
-    "ignores": [
-      "docs/source"
-    ]
 }

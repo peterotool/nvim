@@ -1,8 +1,63 @@
--- https://github.com/ThePrimeagen/init.lua/blob/249f3b14cc517202c80c6babd0f9ec548351ec71/lua/theprimeagen/remap.lua
--- https://github.com/exosyphon/nvim/blob/f9580dbb4dbe9db15e66220906c28bcacfaa8942/lua/exosyphon/remaps.lua
+-- ============================================================
+-- basic keymaps
+-- ============================================================
+-- [[ Basic Keymaps ]]
+--  See `:help vim.keymap.set()`
 
--- Set clear when pressing <Esc> in normal mode
+-- Clear highlights on search when pressing <Esc> in normal mode
+--  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+
+-- Diagnostic Config & Keymaps
+--  See `:help vim.diagnostic.Opts`
+vim.diagnostic.config {
+  update_in_insert = false,
+  severity_sort = true,
+  float = { border = 'rounded', source = 'if_many' },
+  underline = { severity = { min = vim.diagnostic.severity.WARN } },
+
+  -- Can switch between these as you prefer
+  virtual_text = false, -- Text shows up at the end of the line
+  virtual_lines = false, -- Text shows up underneath the line, with virtual lines
+
+  -- Auto open the float, so you can easily read the errors when jumping with `[d` and `]d`
+  jump = {
+    on_jump = function(_, bufnr)
+      vim.diagnostic.open_float {
+        bufnr = bufnr,
+        scope = 'cursor',
+        focus = false,
+      }
+    end,
+  },
+}
+vim.keymap.set('n', '<leader>d', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+
+-- [[ Basic Autocommands ]]
+--  See `:help lua-guide-autocommands`
+
+-- Highlight when yanking (copying) text
+--  Try it with `yap` in normal mode
+--  See `:help vim.hl.on_yank()`
+vim.api.nvim_create_autocmd('TextYankPost', {
+  desc = 'Highlight when yanking (copying) text',
+  group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
+  callback = function()
+    vim.hl.hl_op()
+  end,
+})
+
+-- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
+-- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
+-- is not what someone will guess without a bit more experience.
+--
+-- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
+-- or just use <C-\><C-n> to exit terminal mode
+vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+
+-- Open Terminals
+-- vim.keymap.set({ 'n' }, '<leader>tv', ':vsp  term://zsh<cr>', { desc = 'open [v]ertical [t]erminal' })
+-- vim.keymap.set({ 'n' }, '<leader>th', ':sp  term://zsh<cr>', { desc = 'Open [H]orizontal [T]erminal' })
 
 vim.keymap.set('n', 'n', 'nzzzv', { desc = 'Next search result (centered)' })
 vim.keymap.set('n', 'N', 'Nzzzv', { desc = 'Previous search result (centered)' })
@@ -23,39 +78,11 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right [W]
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower [W]indow' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper [W]indow' })
 
--- Diagnostic
-vim.keymap.set('n', '<leader>d', vim.diagnostic.setloclist, { desc = 'Open [D]iagnostic Quickfix list' })
-
--- Open Terminals
--- vim.keymap.set({ 'n' }, '<leader>tv', ':vsp  term://zsh<cr>', { desc = 'open [v]ertical [t]erminal' })
--- vim.keymap.set({ 'n' }, '<leader>th', ':sp  term://zsh<cr>', { desc = 'Open [H]orizontal [T]erminal' })
-
--- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
--- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
--- is not what someone will guess without a bit more experience.
---
--- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
--- or just use <C-\><C-n> to exit terminal mode
-vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
-
 -- Center screen after various operations
 vim.keymap.set('n', '<C-u>', '<C-u>zz', { desc = 'Scroll up and center' })
 vim.keymap.set('n', '<C-d>', '<C-d>zz', { desc = 'Scroll down and center' })
 vim.keymap.set('n', 'n', 'nzzzv', { desc = 'Keep cursor centered' })
 vim.keymap.set('n', 'N', 'Nzzzv', { desc = 'Keep cursor centered' })
-
--- Buffers
-vim.keymap.set('n', '<Tab>', ':bnext<CR>', { desc = '[N]ext Buffer' }) -- next buffer
-vim.keymap.set('n', '<S-Tab>', ':bprevious<CR>', { desc = '[P]reviuos Buffer' }) -- previous buffer
-vim.keymap.set('n', '<leader>Q', '<cmd>bufdo if !&modified | bdelete | endif<CR>', { desc = 'Delete Unmodified Buffers' })
-vim.keymap.set('n', '<leader>w', ':write<CR>', { desc = '[W]rite Buffer' }) -- write buffer
-
--- Window management
-vim.keymap.set('n', '<leader>v', '<C-w>v', { desc = '[S]plit Window [V]ertically' }) -- split window vertically
-vim.keymap.set('n', '<leader>x', ':close<CR>', { desc = '[C]lose Current [S]plit [W]indow' }) -- close current split window
-
--- Exit insert mode without hitting Esc
--- vim.keymap.set('i', 'jj', '<Esc>', { desc = 'Esc' })
 
 -- Copy file paths
 vim.keymap.set('n', '<leader>cf', '<cmd>let @+ = expand("%:t")<CR>', { desc = '[C]opy File Name' })
@@ -107,53 +134,13 @@ vim.keymap.set('n', '<leader>fr', '<cmd>Neotree reveal<cr>', { desc = 'Reveal fi
 vim.keymap.set('n', '<leader>fg', '<cmd>Neotree git_status<cr>', { desc = 'Neo-tree Git status' })
 vim.keymap.set('n', '<leader>fb', '<cmd>Neotree buffers<cr>', { desc = 'Neo-tree Buffers' })
 
--- mini.bufremove
--- 🔥 Smart delete (BEST VERSION)
-vim.keymap.set('n', '<leader>q', function()
-  local bufnr = vim.api.nvim_get_current_buf()
+-- Buffers
+vim.keymap.set('n', '<Tab>', ':bnext<CR>', { desc = '[N]ext Buffer' }) -- next buffer
+vim.keymap.set('n', '<S-Tab>', ':bprevious<CR>', { desc = '[P]reviuos Buffer' }) -- previous buffer
+vim.keymap.set('n', '<leader>q', ':bd<CR>', { desc = '[B]uffer Delete ' })
+vim.keymap.set('n', '<leader>Q', '<cmd>bufdo if !&modified | bdelete | endif<CR>', { desc = 'Delete Unmodified Buffers' })
+vim.keymap.set('n', '<leader>w', ':write<CR>', { desc = '[W]rite Buffer' }) -- write buffer
 
-  if vim.bo[bufnr].modified then
-    -- :help confirm()
-    -- confirm({msg}, {choices}, {default})
-    -- Choices string -> '&Yes\n&No'
-    -- Default choice -> 2
-    -- | Option | Index |
-    -- | ------ | ----- |
-    -- | Yes    | 1     |
-    -- | No     | 2     |
-    local choice = vim.fn.confirm('Buffer has unsaved changes. Delete anyway?', '&Yes\n&No', 2)
-    -- Cancel if user says no
-    if choice ~= 1 then
-      return
-    end
-    -- Force delete (after confirmation)
-    require('mini.bufremove').delete(bufnr, true)
-  else
-    require('mini.bufremove').delete(bufnr, false)
-  end
-end, { desc = '[B]uffer Delete (smart)' })
-
--- ⚡ Fast force delete
-vim.keymap.set('n', '<leader>Q', function()
-  require('mini.bufremove').delete(0, true)
-end, { desc = '[B]uffer Force Delete' })
-
--- 🧹 Close others (like VSCode “Close Others”)
-vim.keymap.set('n', '<leader>bo', function()
-  local current = vim.api.nvim_get_current_buf()
-
-  for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
-    if bufnr ~= current and vim.bo[bufnr].buflisted then
-      require('mini.bufremove').delete(bufnr, false)
-    end
-  end
-end, { desc = '[B]uffer Close Others' })
-
---🧨 Close all buffers
-vim.keymap.set('n', '<leader>ba', function()
-  for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
-    if vim.bo[bufnr].buflisted then
-      require('mini.bufremove').delete(bufnr, true)
-    end
-  end
-end, { desc = '[B]uffer Close All' })
+-- Window management
+vim.keymap.set('n', '<leader>v', '<C-w>v', { desc = '[S]plit Window [V]ertically' }) -- split window vertically
+vim.keymap.set('n', '<leader>x', ':close<CR>', { desc = '[C]lose Current [S]plit [W]indow' }) -- close current split window

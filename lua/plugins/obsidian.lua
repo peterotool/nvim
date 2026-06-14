@@ -1,34 +1,34 @@
--- https://github.com/epwalsh/obsidian.nvim
-
 -- TODO: add Keympas
 -- https://github.com/obsidian-nvim/obsidian.nvim/wiki/Keymaps
-return {
-  'epwalsh/obsidian.nvim',
-  version = '*',
-  lazy = true,
-  ft = 'markdown',
-  dependencies = {
-    'nvim-lua/plenary.nvim',
-  },
-  opts = {
-    workspaces = {
-      {
-        name = 'brain',
-        path = '~/Code/gists',
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'markdown',
+  once = true,
+  callback = function()
+    vim.pack.add {
+      'https://github.com/nvim-lua/plenary.nvim',
+      'https://github.com/epwalsh/obsidian.nvim',
+    }
+
+    require('obsidian').setup {
+      workspaces = {
+        {
+          name = 'brain',
+          path = '~/Code/gists',
+        },
       },
-    },
+      ui = {
 
-    ui = {
-      enable = true,
-    },
+        -- disable concealed text (texto oculto)
+        enable = false,
+      },
+      checkbox = {
+        enabled = true,
+        create_new = false,
+      },
+      -- Remove Obsidian's default (Smart Action) <CR> mapping in markdown buffers
+      -- verbose nmap <CR>
 
-    checkbox = {
-      enabled = true,
-      create_new = false,
-    },
-
-    -- Remove Obsidian's default (Smart Action) <CR> mapping in markdown buffers
-    -- verbose nmap <CR>
-    mappings = {},
-  },
-}
+      mappings = {},
+    }
+  end,
+})
