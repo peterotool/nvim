@@ -2,7 +2,6 @@ vim.pack.add {
   { src = 'https://github.com/windwp/nvim-autopairs' },
   { src = 'https://github.com/hrsh7th/nvim-cmp' },
   { src = 'https://github.com/windwp/nvim-ts-autotag' },
-  { src = 'https://github.com/numToStr/Comment.nvim' },
   { src = 'https://github.com/lukas-reineke/indent-blankline.nvim' },
   { src = 'https://github.com/tpope/vim-sleuth' },
   { src = 'https://github.com/folke/lazydev.nvim' },
@@ -23,9 +22,6 @@ end
 
 -- nvim-ts-autotag
 require('nvim-ts-autotag').setup {}
-
--- Comment.nvim
-require('Comment').setup()
 
 -- indent-blankline (ibl)
 require('ibl').setup {}
