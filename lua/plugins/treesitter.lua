@@ -35,7 +35,27 @@ local parsers = {
   'vimdoc',
   'regex',
 }
-require('nvim-treesitter').install(parsers)
+-- nvim-treesitter's get_installed() considers a parser "installed" if its
+-- queries/ directory exists, even when the compiled .so is missing. Filter to
+-- only the parsers that truly lack a .so so we can force-install just those.
+local parser_dir = vim.fn.stdpath('data') .. '/site/parser'
+local missing = vim.tbl_filter(function(lang)
+  return not vim.uv.fs_stat(parser_dir .. '/' .. lang .. '.so')
+end, parsers)
+
+if #missing > 0 then
+  require('nvim-treesitter').install(missing, { force = true }):await(function(err)
+    if err then
+      vim.notify('nvim-treesitter: ' .. tostring(err), vim.log.levels.WARN)
+      return
+    end
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+      if vim.bo[buf].filetype == 'markdown' and vim.api.nvim_buf_is_loaded(buf) then
+        vim.treesitter.start(buf, 'markdown')
+      end
+    end
+  end)
+end
 
 ---@param buf integer
 ---@param language string
