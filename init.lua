@@ -66,8 +66,9 @@ vim.api.nvim_create_autocmd('PackChanged', {
   end,
 })
 
-require('vim._core.ui2').enable { enable = true }
-
 require 'core.options'
 require 'core.keymaps'
+require 'core.fence-runner'
 require 'plugins'
+
+require('vim._core.ui2').enable { enable = true }

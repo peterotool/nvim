@@ -1,5 +1,6 @@
 vim.pack.add {
   'https://github.com/stevearc/oil.nvim',
+  'https://github.com/refractalize/oil-git-status.nvim',
 }
 
 require('oil').setup {
@@ -15,14 +16,17 @@ require('oil').setup {
   view_options = {
     show_hidden = true,
   },
+  win_options = {
+    signcolumn = 'yes:2',
+  },
 }
 
--- Open parent directory in current window
+require('oil-git-status').setup()
+
 vim.keymap.set('n', '-', '<CMD>Oil<CR>', {
   desc = 'Open parent directory in current window',
 })
 
--- Open parent directory in floating window
 vim.keymap.set('n', '<space>-', require('oil').toggle_float, {
   desc = 'Open parent directory in floating window',
 })

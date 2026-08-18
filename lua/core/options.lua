@@ -152,7 +152,3 @@ vim.opt.completeopt = {
 -- Completion suggestions appear while typing without
 -- manually pressing <C-x><C-o> or other completion commands.
 vim.o.autocomplete = true
-
--- Hide the built-in cmdline so Noice - https://github.com/folke/noice.nvim -  can render its own popup UI.
--- NOTE: this may not work with vim._core.ui2 enabled.
--- vim.o.cmdheight = 0

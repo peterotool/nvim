@@ -27,6 +27,7 @@ lint.linters_by_ft = {
   markdown = { 'markdownlint-cli2' },
   python = { 'ruff' },
   sh = { 'shellcheck' },
+  bash = { 'shellcheck' },
   yaml = { 'yamllint' },
   terraform = { 'tflint' },
   json = { 'jsonlint' },
