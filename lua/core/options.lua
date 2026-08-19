@@ -152,3 +152,9 @@ vim.opt.completeopt = {
 -- Completion suggestions appear while typing without
 -- manually pressing <C-x><C-o> or other completion commands.
 vim.o.autocomplete = true
+
+-- Auto-reload buffers when files change on disk (e.g. edited by an external process like Claude).
+vim.o.autoread = true
+vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter', 'CursorHold', 'CursorHoldI' }, {
+  command = "if mode() != 'c' | checktime | endif",
+})
