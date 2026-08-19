@@ -10,6 +10,17 @@ require('neo-tree').setup {
       enabled = true,
     },
     hijack_netrw_behavior = 'open_default',
+    filtered_items = {
+      visible = true,
+      hide_dotfiles = false,
+      hide_gitignored = false,
+    },
+  },
+  window = {
+    preview = {
+      use_float = false,
+      use_image_nvim = false,
+    },
   },
 }
 
