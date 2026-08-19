@@ -155,6 +155,7 @@ vim.o.autocomplete = true
 
 -- Auto-reload buffers when files change on disk (e.g. edited by an external process like Claude).
 vim.o.autoread = true
-vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter', 'CursorHold', 'CursorHoldI' }, {
-  command = "if mode() != 'c' | checktime | endif",
-})
+local _autoread_timer = vim.uv.new_timer()
+_autoread_timer:start(0, 1000, vim.schedule_wrap(function()
+  vim.cmd('silent! checktime')
+end))

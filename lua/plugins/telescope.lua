@@ -39,6 +39,12 @@ vim.pack.add(telescope_plugins)
 -- See `:help telescope` and `:help telescope.setup()`
 require('telescope').setup {
   defaults = {
+    -- Two separate exclusion mechanisms (they do not share config):
+    --   file_ignore_patterns: Lua patterns filtered by Telescope in-process.
+    --                         Applies to file-listing pickers (find_files uses fd/find internally).
+    --   vimgrep_arguments:    Flags forwarded to ripgrep (rg).
+    --                         Applies only to content-search pickers (live_grep, grep_string).
+    file_ignore_patterns = { 'venv/', '%.venv/', '__pycache__/', 'node_modules/', '%.git/' },
     vimgrep_arguments = {
       'rg', '--color=never', '--no-heading', '--with-filename',
       '--line-number', '--column', '--smart-case',
