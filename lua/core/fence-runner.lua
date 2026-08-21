@@ -1,6 +1,3 @@
--- Most languages: the temp file is appended at the end of the command.
--- Rust: uses %s as a placeholder because it needs two steps
--- (compile with rustc, then execute the resulting binary).
 -- Python is handled separately by resolve_python() below.
 local runners = {
   lua = 'lua',
@@ -9,11 +6,8 @@ local runners = {
   zsh = 'zsh',
   javascript = 'node',
   js = 'node',
-  ruby = 'ruby',
   php = 'php',
   r = 'Rscript',
-  go = 'go run',
-  rust = 'rustc %s -o /tmp/__nvim_fence_rs 2>&1 && /tmp/__nvim_fence_rs',
 }
 
 -- For Python: search for a virtualenv before falling back to system python.
@@ -59,8 +53,74 @@ local function get_fence_at_cursor()
   end
 end
 
--- Collects all fences of the same language that appear BEFORE stop_line.
--- Lets the current block access classes/functions defined in previous blocks.
+-- Per-language wrappers applied to each preceding fence.
+-- Suppress stdout/stderr so earlier print/echo/console.log calls don't leak
+-- into the current fence's output, while still making definitions available.
+local preceding_wrappers = {
+  python = function(code)
+    local indented = '    ' .. code:gsub('\n', '\n    ')
+    return table.concat({
+      'import sys as __sys, io as __io',
+      '__stdout, __stderr = __sys.stdout, __sys.stderr',
+      '__sys.stdout = __sys.stderr = __io.StringIO()',
+      'try:',
+      indented,
+      'except Exception:',
+      '    pass',
+      'finally:',
+      '    __sys.stdout, __sys.stderr = __stdout, __stderr',
+    }, '\n')
+  end,
+
+  lua = function(code)
+    return table.concat({
+      'local __print = print; print = function() end',
+      'pcall(function()',
+      code,
+      'end)',
+      'print = __print',
+    }, '\n')
+  end,
+
+  -- Bash/sh/zsh: run the block in a subshell redirected to /dev/null
+  bash = function(code)
+    return '( ' .. code .. ' ) >/dev/null 2>&1 || true'
+  end,
+
+  javascript = function(code)
+    return table.concat({
+      ';(function(){',
+      '  const _l=console.log,_e=console.error,_w=console.warn;',
+      '  console.log=console.error=console.warn=()=>{};',
+      '  try{',
+      '    ' .. code:gsub('\n', '\n    '),
+      '  }catch(e){}',
+      '  console.log=_l;console.error=_e;console.warn=_w;',
+      '})();',
+    }, '\n')
+  end,
+
+  r = function(code)
+    return table.concat({
+      'local({',
+      '  con <- textConnection(character(), "w")',
+      '  sink(con); sink(con, type="message")',
+      '  tryCatch({' .. code .. '}, error=function(e){})',
+      '  sink(); sink(type="message")',
+      '})',
+    }, '\n')
+  end,
+}
+preceding_wrappers.python3 = preceding_wrappers.python
+preceding_wrappers.sh = preceding_wrappers.bash
+preceding_wrappers.zsh = preceding_wrappers.bash
+preceding_wrappers.js = preceding_wrappers.javascript
+
+-- Scans the buffer for all fences in `lang` that close before `stop_line`
+-- (the opening line of the fence the user is running). Returns them as a list
+-- of raw code strings — one entry per fence — so run_fence can apply a
+-- language-specific output-suppression wrapper to each one individually before
+-- concatenating them with the current block.
 local function collect_preceding_fences(lang, stop_line)
   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
   local blocks = {}
@@ -85,7 +145,7 @@ local function collect_preceding_fences(lang, stop_line)
     end
   end
 
-  return #blocks > 0 and table.concat(blocks, '\n\n') or nil
+  return blocks
 end
 
 local function run_fence()
@@ -109,10 +169,16 @@ local function run_fence()
     return
   end
 
-  -- Prepend preceding fences of the same language so the current block
-  -- can access classes/functions defined in earlier blocks.
-  local preceding = collect_preceding_fences(lang, fence_line)
-  local full_code = preceding and (preceding .. '\n\n' .. code) or code
+  -- Prepend preceding fences wrapped in try/except so their exceptions
+  -- never prevent the current fence from running.
+  local blocks = collect_preceding_fences(lang, fence_line)
+  local wrap = preceding_wrappers[lang_key]
+  local parts = {}
+  for _, block in ipairs(blocks) do
+    table.insert(parts, wrap and wrap(block) or block)
+  end
+  table.insert(parts, code)
+  local full_code = table.concat(parts, '\n\n')
 
   -- Write code to a temp file with the correct extension so the interpreter
   -- recognizes it (e.g. rustc requires .rs).
