@@ -8,15 +8,11 @@ conform.setup {
 
   -- Auto-format on save
   format_on_save = function(bufnr)
-    local disable_filetypes = {
-      c = true,
-      cpp = true,
-    }
-
-    return {
-      timeout_ms = 500,
-      lsp_format = disable_filetypes[vim.bo[bufnr].filetype] and 'never' or 'fallback',
-    }
+    local disable_filetypes = { c = true, cpp = true }
+    if disable_filetypes[vim.bo[bufnr].filetype] then
+      return false
+    end
+    return { timeout_ms = 500, lsp_format = 'fallback' }
   end,
 
   -- Formatters by filetype
@@ -29,8 +25,18 @@ conform.setup {
     sh = { 'shfmt' },
     -- Prettier
     json = { 'prettier' },
+    jsonc = { 'prettier' },
     yaml = { 'prettier' },
     markdown = { 'prettier' },
+  },
+
+  -- Per-formatter options
+  formatters = {
+    -- preserve-wrap prevents prettier from reflowing/joining markdown prose lines;
+    -- list indentation is still normalized (consistent with MD007 indent:2)
+    prettier = {
+      prepend_args = { '--prose-wrap', 'preserve' },
+    },
   },
 }
 
@@ -47,6 +53,10 @@ end, {
 -- Auto-format before save
 vim.api.nvim_create_autocmd('BufWritePre', {
   callback = function(args)
+    local disable_filetypes = { c = true, cpp = true }
+    if disable_filetypes[vim.bo[args.buf].filetype] then
+      return
+    end
     conform.format {
       bufnr = args.buf,
       timeout_ms = 500,

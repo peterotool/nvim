@@ -2,15 +2,6 @@ vim.pack.add { { src = 'https://github.com/mfussenegger/nvim-lint' } }
 
 local lint = require 'lint'
 
-local markdownlint_config = vim.fn.expand '~/.dotfiles/stow/nvim/.config/nvim/.markdownlint.jsonc'
-if vim.fn.filereadable(markdownlint_config) == 1 then
-  local markdownlint = lint.linters['markdownlint-cli2']
-  markdownlint.args = vim.list_extend({
-    '--config',
-    markdownlint_config,
-  }, markdownlint.args)
-end
-
 lint.linters['ruff'].args = {
   'check',
   '--stdin-filename',
@@ -38,11 +29,14 @@ vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost', 'InsertLeave' }, {
   group = lint_augroup,
   callback = function()
     if vim.bo.modifiable then
-      lint.try_lint()
+      -- cwd is set to the file's directory so markdownlint-cli2 discovers .markdownlint.jsonc
+      -- by walking up from there; other linters (ruff, shellcheck, etc.) are unaffected by cwd
+      lint.try_lint(nil, { cwd = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':h') })
     end
   end,
 })
 
 vim.keymap.set('n', '<leader>l', function()
-  lint.try_lint()
+  -- see autocmd above for cwd rationale
+  lint.try_lint(nil, { cwd = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':h') })
 end, { desc = '[Lint] buffer' })
