@@ -1,3 +1,4 @@
+-- The plugin interferes with message display while a macro is being recorded.
 vim.o.cmdheight = 0
 vim.g.tiny_cmdline = {
   width = { value = '70%' },

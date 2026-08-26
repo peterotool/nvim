@@ -35,7 +35,7 @@ conform.setup {
     -- preserve-wrap prevents prettier from reflowing/joining markdown prose lines;
     -- list indentation is still normalized (consistent with MD007 indent:2)
     prettier = {
-      prepend_args = { '--prose-wrap', 'preserve' },
+      prepend_args = { '--prose-wrap', 'preserve', '--tab-width', '4' },
     },
   },
 }
