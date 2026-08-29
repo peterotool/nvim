@@ -2,6 +2,12 @@ vim.pack.add { { src = 'https://github.com/mfussenegger/nvim-lint' } }
 
 local lint = require 'lint'
 
+lint.linters['markdownlint-cli2'].args = {
+  '--config',
+  vim.fn.expand '~/.markdownlint.jsonc',
+  '-',
+}
+
 lint.linters['ruff'].args = {
   'check',
   '--stdin-filename',
