@@ -14,6 +14,4 @@ require('aerial').setup {
   },
 }
 
-vim.keymap.set('n', '<leader>o', '<cmd>AerialToggle!<CR>', { desc = 'Toggle Aerial' })
-
-vim.keymap.set('n', '<leader>on', '<cmd>AerialNavToggle<CR>', { desc = 'Toggle Aerial Navigation' })
+vim.keymap.set('n', '<leader>a', '<cmd>AerialToggle!<CR>', { desc = 'Toggle Aerial' })
