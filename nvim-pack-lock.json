@@ -156,7 +156,8 @@
     },
     "obsidian.nvim": {
       "rev": "726b60c89f4bafef267a714ea1faa1335bdd414a",
-      "src": "https://github.com/epwalsh/obsidian.nvim"
+      "src": "https://github.com/epwalsh/obsidian.nvim",
+      "version": ">=0.0.0"
     },
     "oil-git-status.nvim": {
       "rev": "a3e2ccb00cb8822115e28a9a1791eda051d940c9",

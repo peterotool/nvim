@@ -1,34 +1,62 @@
--- TODO: add Keympas
--- https://github.com/obsidian-nvim/obsidian.nvim/wiki/Keymaps
+local obsidian_group = vim.api.nvim_create_augroup('obsidian-markdown', { clear = true })
+
 vim.api.nvim_create_autocmd('FileType', {
+  group = obsidian_group,
   pattern = 'markdown',
-  once = true,
-  callback = function()
-    vim.pack.add {
-      'https://github.com/nvim-lua/plenary.nvim',
-      'https://github.com/epwalsh/obsidian.nvim',
-    }
+  callback = function(args)
+    if vim.bo[args.buf].buftype ~= '' then
+      return
+    end
 
-    require('obsidian').setup {
-      workspaces = {
+    if not vim.g.obsidian_setup then
+      vim.pack.add {
         {
-          name = 'brain',
-          path = '~/Code/gists',
+          src = 'https://github.com/obsidian-nvim/obsidian.nvim',
+          version = vim.version.range '*',
         },
-      },
-      ui = {
+        'https://github.com/nvim-lua/plenary.nvim',
+        'https://github.com/nvim-telescope/telescope.nvim',
+      }
 
-        -- disable concealed text (texto oculto)
-        enable = false,
-      },
-      checkbox = {
-        enabled = true,
-        create_new = false,
-      },
-      -- Remove Obsidian's default (Smart Action) <CR> mapping in markdown buffers
-      -- verbose nmap <CR>
+      require('obsidian').setup {
+        legacy_commands = false,
+        workspaces = {
+          {
+            name = 'brain',
+            path = '~/Code/gists',
+          },
+        },
+        picker = {
+          name = 'telescope.nvim',
+        },
+        ui = {
+          enable = false,
+        },
+        checkbox = {
+          enabled = true,
+          create_new = false,
+        },
+        mappings = {},
+      }
 
-      mappings = {},
-    }
+      vim.g.obsidian_setup = true
+    end
+
+    local function map(lhs, command, desc)
+      vim.keymap.set('n', lhs, '<cmd>' .. command .. '<CR>', {
+        buffer = args.buf,
+        silent = true,
+        desc = desc,
+      })
+    end
+
+    map('<leader>ob', 'ObsidianBacklinks', 'Obsidian backlinks')
+    map('<leader>od', 'ObsidianToday', 'Obsidian daily note')
+    map('<leader>ol', 'ObsidianLinks', 'Obsidian note links')
+    map('<leader>oo', 'ObsidianOpen', 'Open in Obsidian')
+    map('<leader>oq', 'ObsidianQuickSwitch', 'Obsidian quick switch')
+    map('<leader>os', 'ObsidianSearch', 'Search Obsidian notes')
+    map('<leader>ot', 'ObsidianTemplate', 'Insert Obsidian template')
+    map('<leader>oT', 'ObsidianTOC', 'Obsidian table of contents')
   end,
 })
